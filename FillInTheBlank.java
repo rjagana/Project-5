@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Scanner;
 
 public class FillInTheBlank extends Question {
@@ -36,9 +37,28 @@ public class FillInTheBlank extends Question {
         return answer;
     }
 
+    public String setAnswer2() {
+        String choicePrompt = "What is the answer to the blank?";
+        String choiceError = "Please enter some text for your choice!";
+        String answer = "";
+        boolean loop = true;
+        Scanner scn = new Scanner(System.in);
+
+        while (loop) {
+            answer = JOptionPane.showInputDialog(null, choicePrompt, "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+            if (answer != null) {
+                loop = false;
+            } else {
+                System.out.println(choiceError);
+                loop = true;
+            }
+        }
+        return answer;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s\nAnswer: %s\n", getQuestion(), setAnswer());
+        return String.format("%s\nAnswer: %s\n", getQuestion(), setAnswer2());
     }
 
     public String toDataString() {
