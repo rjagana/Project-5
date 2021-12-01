@@ -1,4 +1,5 @@
 
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -53,7 +54,7 @@ public class Quiz {
     }
 
     //method that makes a multiple choice quiz given an amount of questions
-    public ArrayList<Question> multipleChoiceQuestionMaker(int length) {
+   public ArrayList<Question> multipleChoiceQuestionMaker(int length) {
         //variables used in method
         Scanner scn = new Scanner(System.in);
         ArrayList<Question> questionList = new ArrayList<>();
@@ -85,6 +86,36 @@ public class Quiz {
         return questionList;
     }
 
+    public ArrayList<Question> multipleChoiceQuestionMaker2(int length) {
+        //variables used in method
+        Scanner scn = new Scanner(System.in);
+        ArrayList<Question> questionList = new ArrayList<>();
+        String questionTitle = "";
+        ArrayList<String> choices = new ArrayList<>();
+        boolean loop = false;
+        String answer;
+
+        //allows a user to make a list of multiple choice questions
+        int questionNumber = 0;
+        for (int i = 0; i < length; i++) {
+            questionNumber = i + 1;
+            questionTitle = JOptionPane.showInputDialog(null, "Please enter the question for question " + questionNumber,
+                    "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+            MultipleChoice temp = new MultipleChoice();
+            choices = temp.setChoices2();
+            do {
+                String[] options = {"D", "C", "B", "A"};
+                 answer = String.valueOf(JOptionPane.showOptionDialog(null, "Please select the letter answer for this question", "Quiz Applciation",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                        null, options, options[1]));
+                loop = false;
+            } while (loop);
+            Question newQuestion = new MultipleChoice(questionTitle, answer, choices);
+            questionList.add(newQuestion);
+        }
+        return questionList;
+    }
+
     //method that makes a Fill In The Blank quiz given an amount of questions
     public ArrayList<Question> fillInTheBlankQuestionMaker(int length) {
         //variables used in method
@@ -101,6 +132,31 @@ public class Quiz {
             questionNumber = i + 1;
             System.out.println("Please enter the question for question " + questionNumber);
             questionTitle = scn.nextLine();
+            FillInTheBlank temp = new FillInTheBlank();
+            answer = temp.setAnswer2();
+
+
+            Question newQuestion = new FillInTheBlank(questionTitle, answer);
+            questionList.add(newQuestion);
+        }
+        return questionList;
+    }
+
+    public ArrayList<Question> fillInTheBlankQuestionMaker2(int length) {
+        //variables used in method
+        Scanner scn = new Scanner(System.in);
+        ArrayList<Question> questionList = new ArrayList<Question>();
+        String questionTitle = "";
+        ArrayList<String> choices = new ArrayList<String>();
+        String answer = "";
+        boolean loop = false;
+
+        //allows a user to make a list of FIB questions
+        int questionNumber = 0;
+        for (int i = 0; i < length; i++) {
+            questionNumber = i + 1;
+            questionTitle = JOptionPane.showInputDialog(null, "Please enter the question for question " + questionNumber,
+                    "Quiz Application", JOptionPane.QUESTION_MESSAGE);
 
 
 
@@ -125,6 +181,27 @@ public class Quiz {
             questionNumber = i + 1;
             System.out.println("Please enter the question for question " + questionNumber);
             questionTitle = scn.nextLine();
+
+            Question newQuestion = new TrueOrFalse(questionTitle, answer);
+            questionList.add(newQuestion);
+        }
+        return questionList;
+    }
+
+    public ArrayList<Question> trueOrFalseQuestionMaker2(int length) {
+        //variables used in method
+        Scanner scn = new Scanner(System.in);
+        ArrayList<Question> questionList = new ArrayList<Question>();
+        String questionTitle = "";
+        String answer = "";
+        boolean loop = false;
+
+        //allows a user to make a list of multiple choice questions
+        int questionNumber = 0;
+        for (int i = 0; i < length; i++) {
+            questionNumber = i + 1;
+            questionTitle = JOptionPane.showInputDialog(null, "Please enter the question for question " + questionNumber,
+                    "Quiz Application", JOptionPane.QUESTION_MESSAGE);
 
             Question newQuestion = new TrueOrFalse(questionTitle, answer);
             questionList.add(newQuestion);
@@ -319,6 +396,151 @@ public class Quiz {
         return quiz;
     }
 
+   public Quiz makeQuiz2() throws FileNotFoundException {
+        //scanner
+        Scanner scn = new Scanner(System.in);
+
+        //variables used in method
+        int userQuizType = 0;
+        int userQuizLength = 0;
+        ArrayList<Question> questionList = new ArrayList<Question>();
+        userQuizTitle = "";
+        int rando = 0;
+        String userQuizRandom = "";
+        String userQuizConfirm = "";
+
+        String userQuizTypeMC = "Multiple Choice";
+        String userQuizTypeFIB = "Fill In The Blank";
+        String userQuizTypeTF = "True Or False";
+        String userQuizTypeString = "";
+
+        //variables for the messages displayed to user
+        String makeQuizType = "What type of quiz would you like to make?";
+
+        String makeQuizLength = "How many questions would you like this Quiz to be?";
+
+        String makeQuizTitle = "What would you like the title of this quiz to be?";
+
+        String makeQuizRandom = "Would you like the question order to be random?";
+
+        String makeQuizConfirm = "Are you happy with your choices?";
+
+        //STARTS HERE
+        JOptionPane.showMessageDialog(null, "Welcome to the quiz maker!", "Quiz Application",
+                JOptionPane.INFORMATION_MESSAGE);
+        //Teacher chooses:
+        //TITLE
+        //QUESTION TYPE (Multiple Choice, Fill in the blank, or Dropdown menu)
+        //RANDOM (if they want it to be a randomized quiz or not)
+        //# OF QUESTIONS
+
+        //at the end it lists them their choices and asks if they want to change their answers
+        //if they say NO then they move on
+        //if they YES they are brought back here to this DO WHILE loop
+        String makeQuizOverview;
+        do {
+
+            //choose question type by input of # from menu
+            String[] options = {"True or False", "Fill in the Blank", "Multiple Choice"};
+            int quizType = JOptionPane.showOptionDialog(null, "What type of quiz would you like to make?", "Quiz Application",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, options, options[1]);
+
+            if (quizType == 2) {
+                userQuizTypeString = userQuizTypeMC;
+            } else if (quizType == 1) {
+                userQuizTypeString = userQuizTypeFIB;
+            } else if (quizType == 0) {
+                userQuizTypeString = userQuizTypeTF;
+            }
+            //based on number chosen set question type in String ~userQuizTypeString~
+          /*  switch (userQuizType) {
+                case 1:
+                    userQuizTypeString = userQuizTypeMC;
+                    break;
+                case 2:
+                    userQuizTypeString = userQuizTypeFIB;
+                    break;
+                case 3:
+                    userQuizTypeString = userQuizTypeTF;
+                    break;
+            }*/
+
+
+            //choose quiz title
+            do {
+                userQuizTitle = JOptionPane.showInputDialog(null, makeQuizTitle,"Quiz Application",
+                        JOptionPane.QUESTION_MESSAGE);
+            } while (checkSameTitle(userQuizTitle));
+
+            //choose quiz length by # input
+
+            boolean quizLengthCheck = true;
+            do {
+                try {
+                    userQuizLength = Integer.parseInt(JOptionPane.showInputDialog(null, makeQuizLength,"Quiz Application",
+                            JOptionPane.QUESTION_MESSAGE));
+                    quizLengthCheck = false;
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Enter a valid number!", "Quiz Application",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    quizLengthCheck = true;
+                }
+            } while (quizLengthCheck);
+
+            //choose to randomize quiz by saying
+            //YES or NO
+            rando = (JOptionPane.showConfirmDialog(null, makeQuizRandom, "Quiz Application", JOptionPane.YES_NO_OPTION));
+            boolean quizRandomCheck = true;
+
+            if (rando == 0) {
+                userQuizRandom = "YES";
+            } else {
+                userQuizRandom = "NO";
+            }
+
+            //String made based on previous input
+            makeQuizOverview = "Here's your quiz overview:\n\n" +
+                    "Title: " + userQuizTitle + "\n" +
+                    "# Of Questions: " + userQuizLength + "\n" +
+                    "Question Type: " + userQuizTypeString + "\n" +
+                    "Random: " + userQuizRandom;
+
+
+            //lists user their choices
+            //then asks them if they want to change it
+            JOptionPane.showMessageDialog(null, makeQuizOverview, "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+
+
+            userQuizConfirm = String.valueOf(JOptionPane.showConfirmDialog(null, makeQuizConfirm, "Quiz Application", JOptionPane.YES_NO_OPTION));
+            boolean quizConfirmCheck = true;
+
+        } while (userQuizConfirm.equals("NO"));
+
+        //checks if quiz type is multiple choice
+        if (userQuizTypeString.equals(userQuizTypeMC)) {
+            questionList = multipleChoiceQuestionMaker2(userQuizLength);
+        }
+
+        if (userQuizTypeString.equals(userQuizTypeFIB)) {
+            questionList = fillInTheBlankQuestionMaker2(userQuizLength);
+        }
+
+        if (userQuizTypeString.equals(userQuizTypeTF)) {
+            questionList = trueOrFalseQuestionMaker2(userQuizLength);
+        }
+
+        boolean quizRandom;
+        if (userQuizRandom.equalsIgnoreCase("YES")) {
+            Collections.shuffle(questionList);
+        }
+        Quiz quiz = new Quiz(userQuizTitle, userQuizLength, userQuizTypeString, questionList);
+        writeFile(quiz.toString());
+        writeQuizTitles(userQuizTitle);
+        writeQuizData(quiz.toDataString());
+        return quiz;
+    }
+
     public boolean checkSameTitle(String userQuizTitle) throws FileNotFoundException {
         FileReader fr = new FileReader("QuizTitles.txt");
         BufferedReader bufferedReader = new BufferedReader(fr);
@@ -335,7 +557,8 @@ public class Quiz {
 
         for (int i = 0; i < titlesList.size(); i++) {
             if (userQuizTitle.equalsIgnoreCase(titlesList.get(i))) {
-                System.out.println("Sorry, this quiz title is already taken! Please choose another title!");
+                JOptionPane.showMessageDialog(null, "Sorry, this quiz title is already taken! Please choose another title!",
+                        "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
         }
