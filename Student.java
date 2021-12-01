@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -15,7 +16,7 @@ public class Student extends User {
     }
 
 
-    public void chooseQuiz() throws IOException {
+    public String chooseQuiz() throws IOException {
         FileReader fr = new FileReader("QuizTitles.txt");
         BufferedReader bufferedReader = new BufferedReader(fr);
         titlesList.clear();
@@ -28,7 +29,14 @@ public class Student extends User {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(titlesList);
+        String[] options = new String[titlesList.size()];
+        for (int i = 0; i < titlesList.size(); i++) {
+            options[i] = titlesList.get(i);
+        }
+        String choice = String.valueOf(JOptionPane.showOptionDialog(null, "Choose the title of the quiz you would like to take!", "Quiz Application",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options, options[1]));
+        return choice;
     }
 
     public boolean checkMatch(String quizTitleChoice) {
@@ -41,8 +49,10 @@ public class Student extends User {
                     return true;
                 }
             }
-            System.out.println("The quiz title you have entered does not exist! Please choose again!");
-            System.out.println("Choose the title of the quiz you would like to take!");
+            JOptionPane.showMessageDialog(null,"The quiz title you have entered does not exist! Please choose again!",
+            "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Choose the title of the quiz you would like to take!",
+                    "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
         } while (!check);
         return false;
     }
@@ -102,11 +112,12 @@ public class Student extends User {
         String answer;
         for (int i = 0; i < x; i++) {
             int temp = i + 1;
-            System.out.println("Please enter your answer for Question " + temp + ":");
-            answer = scan.nextLine();
+             answer = JOptionPane.showInputDialog(null, "Please enter your answer for Question " + temp + ":",
+                    "Quiz Application", JOptionPane.QUESTION_MESSAGE);
             answerList.add(answer);
         }
-        System.out.println("Thank you for taking the quiz");
+        JOptionPane.showMessageDialog(null, "Thank you for taking the quiz", "Quiz Application",
+                JOptionPane.INFORMATION_MESSAGE);
         return answerList;
     }
 
