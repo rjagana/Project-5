@@ -4,6 +4,7 @@ import java.io.IOException;
 public class GUiApp {
 
     public static void main (String[] args) throws IOException {
+        boolean deleteCheck = false;
         //Welcome Message
         JOptionPane.showMessageDialog(null, "Welcome to the Quiz Application!", "Quiz Application",
                 JOptionPane.INFORMATION_MESSAGE);
@@ -28,8 +29,8 @@ public class GUiApp {
            do {
                //DROPDOWN MENU CHOICES
                String[] choices = {"Create a Quiz", "Edit a Quiz", "Delete a Quiz", "Grade a Quiz", "Logout", "Edit Account", "Delete Account"};
-               userChoice = (String) JOptionPane.showInputDialog(null, "Would you like to...",
-                       "Choice?", JOptionPane.QUESTION_MESSAGE,
+               userChoice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
+                       "Quiz Application", JOptionPane.QUESTION_MESSAGE,
                        null, choices, choices[0]);
 
                //teacher is going to create a quiz
@@ -37,10 +38,18 @@ public class GUiApp {
                    teacher.createQuiz();
                    JOptionPane.showMessageDialog(null, TimeStamp.printTimeStamp(), "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                } else if (userChoice.equals("Edit a Quiz")) {                   //teacher is going to edit a quiz
-                   JOptionPane.showMessageDialog(null, "2 works", "Quiz Application",
-                           JOptionPane.QUESTION_MESSAGE);
+                   //JOptionPane.showMessageDialog(null, "2 works", "Quiz Application",
+                          // JOptionPane.QUESTION_MESSAGE);
                } else if (userChoice.equals("Delete a Quiz")) {                 //teacher is going to delete a quiz
-
+                   do {
+                       teacher.showQuizTitles();
+                       JOptionPane.showMessageDialog(null, "These are the quizzes you can delete: \n" +
+                               teacher.getTitlesList(), "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                       String quizTitle = JOptionPane.showInputDialog(null, "What is the name of the quiz you would like to delete?",
+                               "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+                       deleteCheck = teacher.deleteQuiz(quizTitle);
+                       teacher.deleteFromQuizList(quizTitle);
+                   } while (deleteCheck);
                } else if (userChoice.equals("Grade a Quiz")) {                  //teacher is going to grade a quiz
 
                } else if (userChoice.equals("Logout")) {                        //teacher is logging out
@@ -58,8 +67,8 @@ public class GUiApp {
             student.runUser("student");
            String[] choices = {"Take a Quiz", "Logout", "Edit Account", "Delete Account"};
            String userChoice;
-           userChoice = (String) JOptionPane.showInputDialog(null, "Would you like to...",
-                   "Choice?", JOptionPane.QUESTION_MESSAGE,
+           userChoice = (String) JOptionPane.showInputDialog(null, "Select which of the following you would like to do",
+                   "Quiz Application", JOptionPane.QUESTION_MESSAGE,
                    null, choices, choices[0]);
            if (userChoice.equals("Take a Quiz")) {
 
