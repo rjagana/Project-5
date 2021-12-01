@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -183,7 +184,7 @@ public class Teacher extends User {
         }
     }
 
-    public void createQuiz() throws FileNotFoundException {
+    /*public void createQuiz() throws FileNotFoundException {
         Quiz quiz = new Quiz();
         quiz.makeQuiz();
         for (int i = 0; i < quizList.size(); i++) {
@@ -194,6 +195,21 @@ public class Teacher extends User {
         }
         quizList.add(quiz);
         System.out.println("Your quiz has been made!");
+    }*/
+
+    public void createQuiz() throws FileNotFoundException {
+        Quiz quiz = new Quiz();
+        quiz.makeQuiz2();
+        for (int i = 0; i < quizList.size(); i++) {
+            if (quiz.getTitle().equals(quizList.get(i).getTitle())) {
+                JOptionPane.showMessageDialog(null, "This quiz already exists, Please try making a new one!", "Quiz Application",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+        }
+        quizList.add(quiz);
+        JOptionPane.showMessageDialog(null, "Your quiz has been made!", "Quiz Application",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
 
@@ -219,8 +235,8 @@ public class Teacher extends User {
         return false;
     }
 
-    public void getTitlesList() {
-        System.out.println(titlesList);
+    public ArrayList<String> getTitlesList() {
+        return titlesList;
     }
 
     public boolean deleteQuiz(String title) throws IOException {
@@ -235,11 +251,12 @@ public class Teacher extends User {
             }
         }
         if (index == -1) {
-            System.out.println("This quiz does not exist! Choose again!");
+            JOptionPane.showMessageDialog(null, "This quiz does not exist! Choose again!", "Quiz Application",
+                    JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else {
             titlesList.remove(index);
-            System.out.println("The quiz has been removed!");
+            JOptionPane.showMessageDialog(null, "The quiz has been removed!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
 
             ArrayList<String> temp = new ArrayList<>(titlesList);
             PrintWriter pw = new PrintWriter(new FileOutputStream("quizTitles.txt", false));
