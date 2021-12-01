@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.*;
@@ -58,6 +59,46 @@ public class MultipleChoice extends Question {
         }
         return choices;
     }
+
+    public ArrayList setChoices2() {
+        String choicePrompt = "There will be 4 choices. What do you want this choice to say?";
+        String choiceError = "Please enter some text for your choice!";
+        String whichOption = "Option ";
+        String option = "";
+        boolean loop = false;
+        ArrayList<String> choices = new ArrayList<String>();
+        char choice = 0;
+        Scanner scan = new Scanner(System.in);
+        option = "";
+        for (int i = 1; i <= 4; i++) {
+            do {
+                option = JOptionPane.showInputDialog(null, choicePrompt, "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+                if (option.isBlank()) {
+                    System.out.println(choiceError);
+                    loop = true;
+                }
+            } while (loop);
+            switch (i) {
+                case 1:
+                    choice = 'A';
+                    break;
+                case 2:
+                    choice = 'B';
+                    break;
+                case 3:
+                    choice = 'C';
+                    break;
+                case 4:
+                    choice = 'D';
+                    break;
+            }
+            JOptionPane.showMessageDialog(null, whichOption + choice + ": " + option, "Quiz Application",
+                    JOptionPane.INFORMATION_MESSAGE);
+            choices.add(option);
+        }
+        return choices;
+    }
+
 
     public String toString() {
         String A = "";
