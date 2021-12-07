@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -28,7 +29,7 @@ public class User {
 
 
     //Main method for testing
-    public void runUser(String userType) throws InputMismatchException, IOException {
+  /*  public void runUser(String userType) throws InputMismatchException, IOException {
         initializeUserList();
         Scanner s = new Scanner(System.in);
         FileOutputStream fos = new FileOutputStream("userlist.txt", true);
@@ -139,9 +140,77 @@ public class User {
                 }
             }
         }
-    }
+    }*/
     //example of makeQuiz from the Quiz Class being implemented
     //Quiz.makeQuiz();
+
+    public void runUser(String userType) throws InputMismatchException, IOException {
+        initializeUserList();
+        Scanner s = new Scanner(System.in);
+        FileOutputStream fos = new FileOutputStream("userlist.txt", true);
+        PrintWriter pw = new PrintWriter(fos);
+        int userStatus = 0;
+        boolean check;
+        int existingUser;
+        String u;
+        String p;
+
+            existingUser = JOptionPane.showConfirmDialog(null, "Are you an existing user?", "Quiz Application",
+                    JOptionPane.YES_NO_OPTION);
+
+        while (!login) {//While there has not been a successful login
+            u = JOptionPane.showInputDialog(null, "Please enter a username for your account", "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+            p = JOptionPane.showInputDialog(null, "Please enter a password for your account", "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+
+            if (existingUser == 1) { //If the user is a new user
+                if (validEntry(u)) {
+                    if (addUser(u, p, userType) == null) {
+                        JOptionPane.showMessageDialog(null,"Username taken. Please enter a different username", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        User test = addUser(u, p, userType);
+                        username = u;
+                        password = p;
+                        type = userType;
+                        userList.add(test);
+                        writeUserlistToFile();
+                        JOptionPane.showMessageDialog(null, "New user has been created!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                        login = true;
+                        pw.close();
+                        initializeUserList();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null,"Invalid username format", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else { //If the user is an existing user
+                boolean found = searchForUser(u);
+                if (found) {
+                    if (p.equals(passwordInFile)) {//If the password is correct
+                        if (userType.equals(type)) {//If the user is the correct type
+                            JOptionPane.showMessageDialog(null, "Login successful!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                            username = u;
+                            password = p;
+                            login = true;
+                        } else {
+                            if (userType.equalsIgnoreCase("student")) {
+                                    JOptionPane.showMessageDialog(null, "Error. User is not a student.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                                   login = false;
+                            } else {
+                                    JOptionPane.showMessageDialog(null, "Error. User is not a teacher.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                                    login = false;
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error. Incorrect password.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error. Invalid username.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+
+                }
+            }
+        }
+    }
+
 
     public boolean searchForUser(String username) throws IOException {
         FileReader fileReader = new FileReader("userlist.txt");
