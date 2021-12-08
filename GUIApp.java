@@ -55,7 +55,6 @@ public class GUiApp {
                        teacher.deleteFromQuizList(quizTitle);
                    } while (deleteCheck);
                } else if (userChoice.equals("Grade a Quiz")) {                  //teacher is going to grade a quiz
-
                } else if (userChoice.equals("Logout")) {                        //teacher is logging out
                    JOptionPane.showMessageDialog(null, "Thank you for using the Quiz Application!"
                            , "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
@@ -92,14 +91,16 @@ public class GUiApp {
                        if (!checking) {
                            check4 = false;
                        } else {
-                           JOptionPane.showMessageDialog(null, student.answerQuiz(quizTitleChoice), "Quiz Application",
+                           JOptionPane.showMessageDialog(null,student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice)), "Quiz Application",
                                    JOptionPane.INFORMATION_MESSAGE);
-                           JOptionPane.showMessageDialog(null, student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice)),
-                                   "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                          // JOptionPane.showMessageDialog(null, student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice)),
+                             //      "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                          // student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice));
                            check4 = true;
+                           JOptionPane.showMessageDialog(null, "The quiz was turned in at\n" + TimeStamp.printTimeStamp(),
+                                   "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                        }
-                       JOptionPane.showMessageDialog(null, "The quiz was turned in at\n" + TimeStamp.printTimeStamp(),
-                               "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+
                        count4++;
                    } while (!check4);
 
@@ -113,6 +114,8 @@ public class GUiApp {
                            "Quiz Application", JOptionPane.QUESTION_MESSAGE);
                    String tempUser = student.editUser(student.getUsername(), newUsername, newPassword);
                    student.setUsername(tempUser);
+                   JOptionPane.showMessageDialog(null, "User has been edited!", "Quiz Application",
+                           JOptionPane.INFORMATION_MESSAGE);
                } else if (userChoice.equals("Delete Account")) {
                    student.deleteUser(student.getUsername());
                    JOptionPane.showMessageDialog(null, "User deleted. Thank you for using the quiz application!",
