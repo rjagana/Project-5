@@ -20,6 +20,7 @@ public class Student extends User {
         FileReader fr = new FileReader("QuizTitles.txt");
         BufferedReader bufferedReader = new BufferedReader(fr);
         titlesList.clear();
+        String choice;
         try {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -33,9 +34,9 @@ public class Student extends User {
         for (int i = 0; i < titlesList.size(); i++) {
             options[i] = titlesList.get(i);
         }
-        String choice = String.valueOf(JOptionPane.showOptionDialog(null, "Choose the title of the quiz you would like to take!", "Quiz Application",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, options, options[1]));
+        choice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
+                "Quiz Application", JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
         return choice;
     }
 
@@ -45,14 +46,14 @@ public class Student extends User {
             check = true;
             for (int i = 0; i < titlesList.size(); i++) {
                 if (quizTitleChoice.equalsIgnoreCase(titlesList.get(i))) {
-                    System.out.println("You are taking the " + titlesList.get(i) + " quiz!");
+                    JOptionPane.showMessageDialog(null, "You are taking the " + titlesList.get(i) + " quiz!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                     return true;
                 }
             }
             JOptionPane.showMessageDialog(null,"The quiz title you have entered does not exist! Please choose again!",
             "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-            JOptionPane.showMessageDialog(null, "Choose the title of the quiz you would like to take!",
-                    "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Choose the title of the quiz you would like to take!",
+                    //"Quiz Application", JOptionPane.INFORMATION_MESSAGE);
         } while (!check);
         return false;
     }
@@ -101,7 +102,7 @@ public class Student extends User {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(quiz);
+        JOptionPane.showMessageDialog(null, quiz, "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
         return Integer.parseInt(x);
     }
 
@@ -138,6 +139,6 @@ public class Student extends User {
             pw.println(answers.get(i));
         }
         pw.close();
-        return temp;
+        return "Your quiz can be found under the following title: " + temp;
     }
 }
