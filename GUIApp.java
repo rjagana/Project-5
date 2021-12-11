@@ -1,16 +1,13 @@
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class GUIApp {
 
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket("localhost", 4242);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter writer = new PrintWriter(socket.getOutputStream());
+        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
+        ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
         boolean deleteCheck = false;
         boolean checking = false;
         boolean check4 = false;
@@ -27,8 +24,7 @@ public class GUIApp {
 
         //If user is a teacher
         System.out.println(user);
-        writer.write(String.valueOf(user));
-        writer.println();
+        writer.writeObject(String.valueOf(user));
         writer.flush();
 
         if (user == 1) {
@@ -37,7 +33,7 @@ public class GUIApp {
             String username;
             String password;
             String userChoice;
-            reader.readLine();
+            //reader.readLine();
 
             do {
                 //DROPDOWN MENU CHOICES
@@ -45,8 +41,7 @@ public class GUIApp {
                 userChoice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
                         "Quiz Application", JOptionPane.QUESTION_MESSAGE,
                         null, choices, choices[0]);
-                writer.write(userChoice);
-                writer.println();
+                writer.writeObject(userChoice);
                 writer.flush();
 
                 //teacher is going to create a quiz
@@ -59,8 +54,7 @@ public class GUIApp {
                     do {
                         String quizTitle = JOptionPane.showInputDialog(null, "What is the name of the quiz you would like to delete?",
                                 "Quiz Application", JOptionPane.QUESTION_MESSAGE);
-                        writer.write(quizTitle);
-                        writer.println();
+                        writer.writeObject(quizTitle);
                         writer.flush();
                         deleteCheck = Boolean.parseBoolean(reader.readLine());
                     } while (deleteCheck);
@@ -71,13 +65,11 @@ public class GUIApp {
                 } else if (userChoice.equals("Edit Account")) {                  //teacher is editing their account
                     String newUsername = JOptionPane.showInputDialog(null, "Enter your new username: ", "Quiz Application",
                             JOptionPane.QUESTION_MESSAGE);
-                    writer.write(newUsername);
-                    writer.println();
+                    writer.writeObject(newUsername);
                     writer.flush();
                     String newPassword = JOptionPane.showInputDialog(null, "Enter your new password: ", "Quiz Application",
                             JOptionPane.QUESTION_MESSAGE);
-                    writer.write(newPassword);
-                    writer.println();
+                    writer.writeObject(newPassword);
                     writer.flush();
                     JOptionPane.showMessageDialog(null, "User edited successfully!", "Quiz Application",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -96,8 +88,7 @@ public class GUIApp {
                 userChoice = (String) JOptionPane.showInputDialog(null, "Select which of the following you would like to do",
                         "Quiz Application", JOptionPane.QUESTION_MESSAGE,
                         null, choices, choices[0]);
-                writer.write(userChoice);
-                writer.println();
+                writer.writeObject(userChoice);
                 writer.flush();
                 if (userChoice.equals("Take a Quiz")) {
                   /*
@@ -130,13 +121,11 @@ public class GUIApp {
                 } else if (userChoice.equals("Edit Account")) {
                     String newUsername = JOptionPane.showInputDialog(null, "Enter your new username: ", "Quiz Application",
                             JOptionPane.QUESTION_MESSAGE);
-                    writer.write(newUsername);
-                    writer.println();
+                    writer.writeObject(newUsername);
                     writer.flush();
                     String newPassword = JOptionPane.showInputDialog(null, "Enter your new password: ", "Quiz Application",
                             JOptionPane.QUESTION_MESSAGE);
-                    writer.write(newPassword);
-                    writer.println();
+                    writer.writeObject(newPassword);
                     writer.flush();
                     JOptionPane.showMessageDialog(null, "User edited successfully!", "Quiz Application",
                             JOptionPane.INFORMATION_MESSAGE);
