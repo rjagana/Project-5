@@ -390,9 +390,6 @@ public class Quiz {
             Collections.shuffle(questionList);
         }
         Quiz quiz = new Quiz(userQuizTitle, userQuizLength, userQuizTypeString, questionList);
-        writeFile(quiz.toString());
-        writeQuizTitles(userQuizTitle);
-        writeQuizData(quiz.toDataString());
         return quiz;
     }
 

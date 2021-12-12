@@ -8,6 +8,11 @@ public class Teacher extends User {
     private ArrayList<String> titlesList = new ArrayList<String>();
     private ArrayList<Student> studentList = new ArrayList<Student>();
     private ArrayList<String> usernameList = new ArrayList<String>();
+    private boolean deleteCheck;
+
+    public boolean isDeleteCheck() {
+        return deleteCheck;
+    }
 
     public ArrayList<Quiz> getQuizList() {
         return quizList;
@@ -197,19 +202,20 @@ public class Teacher extends User {
         System.out.println("Your quiz has been made!");
     }*/
 
-    public void createQuiz() throws FileNotFoundException {
+    public Quiz createQuiz() throws FileNotFoundException {
         Quiz quiz = new Quiz();
         quiz.makeQuiz2();
         for (int i = 0; i < quizList.size(); i++) {
             if (quiz.getTitle().equals(quizList.get(i).getTitle())) {
                 JOptionPane.showMessageDialog(null, "This quiz already exists, Please try making a new one!", "Quiz Application",
                         JOptionPane.INFORMATION_MESSAGE);
-                return;
+                return quiz;
             }
         }
         quizList.add(quiz);
         JOptionPane.showMessageDialog(null, "Your quiz has been made!", "Quiz Application",
                 JOptionPane.INFORMATION_MESSAGE);
+        return quiz;
     }
 
 
@@ -256,16 +262,9 @@ public class Teacher extends User {
             return true;
         } else {
             titlesList.remove(index);
+            readQuizData();
+            quizList.remove(index);
             JOptionPane.showMessageDialog(null, "The quiz has been removed!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-
-            ArrayList<String> temp = new ArrayList<>(titlesList);
-            PrintWriter pw = new PrintWriter(new FileOutputStream("quizTitles.txt", false));
-            for (String s : temp) {
-                pw.write(s + "\n");
-            }
-
-            //showQuizTitles();
-            pw.close();
             return false;
         }
     }

@@ -7,6 +7,10 @@ public class Student extends User {
 
     private final ArrayList<String> titlesList = new ArrayList<>();
 
+    public ArrayList<String> getTitlesList() {
+        return titlesList;
+    }
+
     public Student() {
         super();
     }
@@ -16,7 +20,7 @@ public class Student extends User {
     }
 
 
-    public String chooseQuiz() throws IOException {
+    public String[] options() throws IOException {
         FileReader fr = new FileReader("QuizTitles.txt");
         BufferedReader bufferedReader = new BufferedReader(fr);
         titlesList.clear();
@@ -34,19 +38,16 @@ public class Student extends User {
         for (int i = 0; i < titlesList.size(); i++) {
             options[i] = titlesList.get(i);
         }
-        choice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
-                "Quiz Application", JOptionPane.QUESTION_MESSAGE,
-                null, options, options[0]);
-        return choice;
+        return options;
     }
 
-    public boolean checkMatch(String quizTitleChoice) {
+    public boolean checkMatch(String quizTitleChoice, ArrayList<String> listOfTitles) {
         boolean check;
         do {
             check = true;
-            for (int i = 0; i < titlesList.size(); i++) {
-                if (quizTitleChoice.equalsIgnoreCase(titlesList.get(i))) {
-                    JOptionPane.showMessageDialog(null, "You are taking the " + titlesList.get(i) + " quiz!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+            for (int i = 0; i < listOfTitles.size(); i++) {
+                if (quizTitleChoice.equalsIgnoreCase(listOfTitles.get(i))) {
+                    JOptionPane.showMessageDialog(null, "You are taking the " + listOfTitles.get(i) + " quiz!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                     return true;
                 }
             }
@@ -139,6 +140,6 @@ public class Student extends User {
             pw.println(answers.get(i));
         }
         pw.close();
-        return "Your quiz can be found under the following title: " + temp;
+        return temp;
     }
 }

@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
+import java.sql.Array;
+import java.util.ArrayList;
 
 public class GUIApp {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 4242);
         ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
@@ -12,6 +14,7 @@ public class GUIApp {
         boolean checking = false;
         boolean check4 = false;
         String quizTitleChoice = "";
+        String[] quizTitleOptions;
         int count4 = 0;
         //Welcome Message
         JOptionPane.showMessageDialog(null, "Welcome to the Quiz Application!", "Quiz Application",
@@ -34,7 +37,8 @@ public class GUIApp {
             String password;
             String userChoice;
             //reader.readLine();
-
+            Teacher teacher = new Teacher();
+            teacher.runUser("teacher");
             do {
                 //DROPDOWN MENU CHOICES
                 String[] choices = {"Create a Quiz", "Edit a Quiz", "Delete a Quiz", "Grade a Quiz", "Logout", "Edit Account", "Delete Account"};
@@ -46,17 +50,22 @@ public class GUIApp {
 
                 //teacher is going to create a quiz
                 if (userChoice.equals("Create a Quiz")) {
-                    reader.readLine();
+                    Quiz newQuiz = teacher.createQuiz();
+                    writer.writeObject(newQuiz);
+                    writer.flush();
+                    JOptionPane.showMessageDialog(null, TimeStamp.printTimeStamp(), "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                 } else if (userChoice.equals("Edit a Quiz")) {                   //teacher is going to edit a quiz
                     //JOptionPane.showMessageDialog(null, "2 works", "Quiz Application",
                     // JOptionPane.QUESTION_MESSAGE);
                 } else if (userChoice.equals("Delete a Quiz")) {                 //teacher is going to delete a quiz
                     do {
+                        JOptionPane.showMessageDialog(null, "These are the quizzes you can delete: \n" +
+                                teacher.getTitlesList(), "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                         String quizTitle = JOptionPane.showInputDialog(null, "What is the name of the quiz you would like to delete?",
                                 "Quiz Application", JOptionPane.QUESTION_MESSAGE);
                         writer.writeObject(quizTitle);
                         writer.flush();
-                        deleteCheck = Boolean.parseBoolean(reader.readLine());
+                        deleteCheck = reader.readBoolean();
                     } while (deleteCheck);
                 } else if (userChoice.equals("Grade a Quiz")) {                  //teacher is going to grade a quiz
                 } else if (userChoice.equals("Logout")) {                        //teacher is logging out
@@ -82,6 +91,8 @@ public class GUIApp {
         } else if (user == 0) {
 
             String userChoice;
+            Student student = new Student();
+            student.runUser("student");
 
             do {
                 String[] choices = {"Take a Quiz", "Logout", "Edit Account", "Delete Account"};
@@ -91,27 +102,31 @@ public class GUIApp {
                 writer.writeObject(userChoice);
                 writer.flush();
                 if (userChoice.equals("Take a Quiz")) {
-                  /*
                    do {
-                       quizTitleChoice = student.chooseQuiz();
-                       checking = student.checkMatch(quizTitleChoice);
+                       quizTitleOptions = (String[]) reader.readObject();
+                       String choice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
+                               "Quiz Application", JOptionPane.QUESTION_MESSAGE,
+                               null, quizTitleOptions, quizTitleOptions[0]);
+                       ArrayList<String> quizTitles = (ArrayList<String>) reader.readObject();
+                       writer.writeObject(choice);
+                       writer.flush();
+                       checking = student.checkMatch(choice, quizTitles);
                        if (!checking) {
                            check4 = false;
                        } else {
-                           JOptionPane.showMessageDialog(null,student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice)), "Quiz Application",
+                           ArrayList<String> answerList = student.answerQuiz(quizTitleChoice);
+                           writer.writeObject(answerList);
+                           String answerFile = (String) reader.readObject();
+                           JOptionPane.showMessageDialog(null, answerFile, "Quiz Application",
                                    JOptionPane.INFORMATION_MESSAGE);
-                          // JOptionPane.showMessageDialog(null, student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice)),
-                             //      "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-                          // student.writeAnswers(quizTitleChoice, student.answerQuiz(quizTitleChoice));
                            check4 = true;
                            JOptionPane.showMessageDialog(null, "The quiz was turned in at\n" + TimeStamp.printTimeStamp(),
                                    "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                        }
-
                        count4++;
                    } while (!check4);
 
-                   */
+
 
                 } else if (userChoice.equals("Logout")) {
                     JOptionPane.showMessageDialog(null, "Thank you for using the Quiz Application!"
