@@ -26,7 +26,7 @@ public class Quiz {
     }
 
     public String getTitle() {
-        return title;
+        return userQuizTitle;
     }
 
     public void setTitle(String title) {
@@ -157,7 +157,7 @@ public class Quiz {
             questionNumber = i + 1;
             questionTitle = JOptionPane.showInputDialog(null, "Please enter the question for question " + questionNumber,
                     "Quiz Application", JOptionPane.QUESTION_MESSAGE);
-
+            FillInTheBlank.setAnswer2();
 
 
             Question newQuestion = new FillInTheBlank(questionTitle, answer);
@@ -515,7 +515,7 @@ public class Quiz {
             userQuizConfirm = String.valueOf(JOptionPane.showConfirmDialog(null, makeQuizConfirm, "Quiz Application", JOptionPane.YES_NO_OPTION));
             boolean quizConfirmCheck = true;
 
-        } while (userQuizConfirm.equals("NO"));
+        } while (userQuizConfirm.equals("1"));
 
         //checks if quiz type is multiple choice
         if (userQuizTypeString.equals(userQuizTypeMC)) {
