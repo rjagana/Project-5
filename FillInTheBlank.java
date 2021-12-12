@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.util.Scanner;
 
 public class FillInTheBlank extends Question {
+    private static String checkAnswer;
     String answerFIB = "";
 
     public FillInTheBlank() {
@@ -37,7 +38,7 @@ public class FillInTheBlank extends Question {
         return answer;
     }
 
-    public String setAnswer2() {
+    public static String setAnswer2() {
         String choicePrompt = "What is the answer to the blank?";
         String choiceError = "Please enter some text for your choice!";
         String answer = "";
@@ -53,12 +54,16 @@ public class FillInTheBlank extends Question {
                 loop = true;
             }
         }
+        checkAnswer = answer;
         return answer;
+    }
+    public String getCheckAnswer() {
+        return checkAnswer;
     }
 
     @Override
     public String toString() {
-        return String.format("%s\nAnswer: %s\n", getQuestion(), setAnswer2());
+        return String.format("%s\nAnswer: %s\n", getQuestion(), getCheckAnswer());
     }
 
     public String toDataString() {
