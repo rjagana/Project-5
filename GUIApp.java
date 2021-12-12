@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.io.IOException;
 
-public class GUiApp {
+public class GUIApp {
 
     public static void main (String[] args) throws IOException {
         boolean deleteCheck = false;
