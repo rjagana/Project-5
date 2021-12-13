@@ -2,8 +2,9 @@
 
 Our program compiles and runs through the GUIApp class. The Application class contains the main method that has the full user interface. 
 
-Ruchitha Jagana - Submitted Report on Brightspace
-Michael Jannetta - Submitted Vocareum Workspace
+Ruchitha Jagana - Submitted Presentation on Brightspace
+Michael Jannetta - Submitted Report on Brightspace
+Sam Yu- Submitted on Vocareum Workspace
 
 
 # Class Outline
