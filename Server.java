@@ -16,16 +16,21 @@ public class Server {
         Socket socket = serverSocket.accept();
         System.out.println("Client connected!");
 
-        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
+        writer.flush();
+        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
 
         String message = (String) reader.readObject();
+
+        String u = (String) reader.readObject();
+        String p = (String) reader.readObject();
+        int exists = (int) reader.readObject();
         String message2; //user choice
 
         if (message.equals("1")) {
             System.out.println("Teacher worked");
             Teacher teacher = new Teacher();
-            teacher.runUser("teacher");
+            teacher.runUser(u, p, "teacher", exists);
             do {
                 int existingUser;
                 String username;
@@ -87,7 +92,7 @@ public class Server {
         } else if (message.equals("0")) {
             System.out.println("Student worked");
             Student student = new Student();
-            student.runUser("student");
+            student.runUser(u,p,"student",exists);
             message2 = (String) reader.readObject();
             do {
                 String[] choices = {"Take a Quiz", "Logout", "Edit Account", "Delete Account"};
