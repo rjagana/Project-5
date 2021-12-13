@@ -8,8 +8,9 @@ public class GUIApp {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 4242);
-        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
+        writer.flush();
+        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         boolean deleteCheck = false;
         boolean checking = false;
         boolean check4 = false;
@@ -30,15 +31,43 @@ public class GUIApp {
         writer.writeObject(String.valueOf(user));
         writer.flush();
 
+        //If user exists
+        int existingUser = JOptionPane.showConfirmDialog(null, "Are you an existing user?", "Quiz Application",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        writer.writeObject(String.valueOf(existingUser));
+        writer.flush();
+
+        boolean loginLoop = true;
+        while (loginLoop) {
+            String u = JOptionPane.showInputDialog(null, "Please enter a username for your account", "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+            String p = JOptionPane.showInputDialog(null, "Please enter a password for your account", "Quiz Application", JOptionPane.QUESTION_MESSAGE);
+            String output = (String) reader.readObject();
+            if (existingUser == 1) {
+                if (output.equals("taken")) {
+                    JOptionPane.showMessageDialog(null, "Username taken. Please enter a different username", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                } else if (output.equals("invalid")) {
+                    JOptionPane.showMessageDialog(null, "Invalid username format", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "New user has been created!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    loginLoop = false;
+                }
+            } else {
+                if (output.equals("success")) {
+                    JOptionPane.showMessageDialog(null, "Login successful!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    loginLoop = false;
+                } else if (output.equals("invalidtype")) {
+                    JOptionPane.showMessageDialog(null, "Error. Invalid user type.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                } else if (output.equals("wrong")) {
+                    JOptionPane.showMessageDialog(null, "Error. Incorrect password.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
+        String userChoice;
         if (user == 1) {
+            Teacher teacher = new Teacher();
             //Check if their account exists already or not
-            int existingUser;
             String username;
             String password;
-            String userChoice;
-            //reader.readLine();
-            Teacher teacher = new Teacher();
-            teacher.runUser("teacher");
             do {
                 //DROPDOWN MENU CHOICES
                 String[] choices = {"Create a Quiz", "Edit a Quiz", "Delete a Quiz", "Grade a Quiz", "Logout", "Edit Account", "Delete Account"};
@@ -89,11 +118,7 @@ public class GUIApp {
             } while (!userChoice.equals("Logout") && !userChoice.equals("Delete Account"));
             //if user is a student
         } else if (user == 0) {
-
-            String userChoice;
             Student student = new Student();
-            student.runUser("student");
-
             do {
                 String[] choices = {"Take a Quiz", "Logout", "Edit Account", "Delete Account"};
                 userChoice = (String) JOptionPane.showInputDialog(null, "Select which of the following you would like to do",
@@ -102,30 +127,29 @@ public class GUIApp {
                 writer.writeObject(userChoice);
                 writer.flush();
                 if (userChoice.equals("Take a Quiz")) {
-                   do {
-                       quizTitleOptions = (String[]) reader.readObject();
-                       String choice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
-                               "Quiz Application", JOptionPane.QUESTION_MESSAGE,
-                               null, quizTitleOptions, quizTitleOptions[0]);
-                       ArrayList<String> quizTitles = (ArrayList<String>) reader.readObject();
-                       writer.writeObject(choice);
-                       writer.flush();
-                       checking = student.checkMatch(choice, quizTitles);
-                       if (!checking) {
-                           check4 = false;
-                       } else {
-                           ArrayList<String> answerList = student.answerQuiz(quizTitleChoice);
-                           writer.writeObject(answerList);
-                           String answerFile = (String) reader.readObject();
-                           JOptionPane.showMessageDialog(null, answerFile, "Quiz Application",
-                                   JOptionPane.INFORMATION_MESSAGE);
-                           check4 = true;
-                           JOptionPane.showMessageDialog(null, "The quiz was turned in at\n" + TimeStamp.printTimeStamp(),
-                                   "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-                       }
-                       count4++;
-                   } while (!check4);
-
+                    do {
+                        quizTitleOptions = (String[]) reader.readObject();
+                        String choice = (String) JOptionPane.showInputDialog(null, "Select which of the following would you like to do",
+                                "Quiz Application", JOptionPane.QUESTION_MESSAGE,
+                                null, quizTitleOptions, quizTitleOptions[0]);
+                        ArrayList<String> quizTitles = (ArrayList<String>) reader.readObject();
+                        writer.writeObject(choice);
+                        writer.flush();
+                        checking = student.checkMatch(choice, quizTitles);
+                        if (!checking) {
+                            check4 = false;
+                        } else {
+                            ArrayList<String> answerList = student.answerQuiz(quizTitleChoice);
+                            writer.writeObject(answerList);
+                            String answerFile = (String) reader.readObject();
+                            JOptionPane.showMessageDialog(null, answerFile, "Quiz Application",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            check4 = true;
+                            JOptionPane.showMessageDialog(null, "The quiz was turned in at\n" + TimeStamp.printTimeStamp(),
+                                    "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        count4++;
+                    } while (!check4);
 
 
                 } else if (userChoice.equals("Logout")) {
