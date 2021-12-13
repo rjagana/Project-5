@@ -8,12 +8,14 @@ public class GUIApp {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 4242);
-        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
+        writer.flush();
+        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         boolean deleteCheck = false;
         boolean checking = false;
         boolean check4 = false;
         String quizTitleChoice = "";
+        String editedUser;
         String[] quizTitleOptions;
         int count4 = 0;
         //Welcome Message
@@ -71,6 +73,7 @@ public class GUIApp {
                 } else if (userChoice.equals("Logout")) {                        //teacher is logging out
                     JOptionPane.showMessageDialog(null, "Thank you for using the Quiz Application!"
                             , "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    return;
                 } else if (userChoice.equals("Edit Account")) {                  //teacher is editing their account
                     String newUsername = JOptionPane.showInputDialog(null, "Enter your new username: ", "Quiz Application",
                             JOptionPane.QUESTION_MESSAGE);
@@ -80,11 +83,17 @@ public class GUIApp {
                             JOptionPane.QUESTION_MESSAGE);
                     writer.writeObject(newPassword);
                     writer.flush();
-                    JOptionPane.showMessageDialog(null, "User edited successfully!", "Quiz Application",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    editedUser = (String) reader.readObject();
+                    if(editedUser.equals("")){
+                        JOptionPane.showMessageDialog(null, "Error. Username taken.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "User edited successfully!", "Quiz Application",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } else if (userChoice.equals("Delete Account")) {                //teacher is deleting their account
                     JOptionPane.showMessageDialog(null, "User deleted. Thank you for using the quiz application!",
                             "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    return;
                 }
             } while (!userChoice.equals("Logout") && !userChoice.equals("Delete Account"));
             //if user is a student
@@ -133,6 +142,7 @@ public class GUIApp {
                             , "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                     writer.close();
                     reader.close();
+                    return;
                 } else if (userChoice.equals("Edit Account")) {
                     String newUsername = JOptionPane.showInputDialog(null, "Enter your new username: ", "Quiz Application",
                             JOptionPane.QUESTION_MESSAGE);
@@ -142,13 +152,19 @@ public class GUIApp {
                             JOptionPane.QUESTION_MESSAGE);
                     writer.writeObject(newPassword);
                     writer.flush();
-                    JOptionPane.showMessageDialog(null, "User edited successfully!", "Quiz Application",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    editedUser = (String) reader.readObject();
+                    if(editedUser.equals("")){
+                        JOptionPane.showMessageDialog(null, "Error. Username taken.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "User edited successfully!", "Quiz Application",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } else if (userChoice.equals("Delete Account")) {
                     JOptionPane.showMessageDialog(null, "User deleted. Thank you for using the quiz application!",
                             "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
                     writer.close();
                     reader.close();
+                    return;
                 }
 
             } while (!userChoice.equals("Logout") && !userChoice.equals("Delete Account"));

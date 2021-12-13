@@ -300,8 +300,8 @@ public class User {
             }
             writeUserlistToFile();
         } else {
-            System.out.println("Error. Username is already taken.");
             newUname = uname;
+            return "";
         }
         return newUname;
     }

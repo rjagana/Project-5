@@ -15,9 +15,9 @@ public class Server {
         System.out.println("Waiting for the client to connect...");
         Socket socket = serverSocket.accept();
         System.out.println("Client connected!");
-
-        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
+        writer.flush();
+        ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
 
         String message = (String) reader.readObject();
         String message2; //user choice
@@ -25,7 +25,6 @@ public class Server {
         if (message.equals("1")) {
             System.out.println("Teacher worked");
             Teacher teacher = new Teacher();
-            teacher.runUser("teacher");
             do {
                 int existingUser;
                 String username;
@@ -74,12 +73,17 @@ public class Server {
                 } else if (message2.equals("Grade a Quiz")) {                  //teacher is going to grade a quiz
                 } else if (message2.equals("Edit Account")) {                  //teacher is editing their account
                     //from gui to server
-                    message = reader.readLine();
+                    message = (String) reader.readObject();
                     String newUsername = message;
-                    message = reader.readLine();
+                    message = (String) reader.readObject();
                     String newPassword = message;
                     String tempUser = teacher.editUser(teacher.getUsername(), newUsername, newPassword);
-                    teacher.setUsername(tempUser);
+                    if (tempUser.equals("")) {
+                        writer.writeObject("1");
+                        writer.flush();
+                    } else {
+                        teacher.setUsername(tempUser);
+                    }
                 } else if (message2.equals("Delete Account")) {                //teacher is deleting their account
                     teacher.deleteUser(teacher.getUsername());
                 }
@@ -87,7 +91,6 @@ public class Server {
         } else if (message.equals("0")) {
             System.out.println("Student worked");
             Student student = new Student();
-            student.runUser("student");
             message2 = (String) reader.readObject();
             do {
                 String[] choices = {"Take a Quiz", "Logout", "Edit Account", "Delete Account"};
@@ -116,12 +119,17 @@ public class Server {
                     writer.close();
                     reader.close();
                 } else if (message2.equals("Edit Account")) {
-                    message = reader.readLine();
+                    message = (String) reader.readObject();
                     String newUsername = message;
-                    message = reader.readLine();
+                    message = (String) reader.readObject();
                     String newPassword = message;
                     String tempUser = student.editUser(student.getUsername(), newUsername, newPassword);
-                    student.setUsername(tempUser);
+                    if (tempUser.equals("")) {
+                        writer.writeObject("1");
+                        writer.flush();
+                    } else {
+                        student.setUsername(tempUser);
+                    }
                 } else if (message2.equals("Delete Account")) {
                     student.deleteUser(student.getUsername());
                     writer.close();

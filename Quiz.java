@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-public class Quiz {
+public class Quiz implements Serializable{
     private String title;
     private int numOfQuestions;
     private String questionType;
