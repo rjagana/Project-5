@@ -8,9 +8,6 @@ Michael Jannetta - Submitted Vocareum Workspace
 
 # Class Outline
 
-Application.java
-- The Application class contains the main method for our program and includes the full user interface that the user will see when they run the application. The testing done to verify that it works properly was going through the program numerous times, both as a teacher and a student, and running through the corresponding functions for a teacher or a student: either creating, editing, or deleting a quiz for a teacher, and taking a quiz for a student. The relationship of the Application class to the other classes is that it brings together all of the other classes by creating objects from them such as Student objects and Teacher objects, and the functions from all of the other classes. 
-
 FillInTheBlank.java
 - The FillInTheBlank class is a subclass of the Question class and allows for a Teacher to make their quizzes with Fill in the Blanks. The testing done to verify that it works properly was established through making numerous Fill in the Blank quizzes and checking if they were created properly. The relationship of this class to other classes is that is a subclass of the Question class and is utilized in the Quiz class if a teacher chooses to make their quiz with Fill in the Blanks.
 
