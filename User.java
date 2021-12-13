@@ -27,145 +27,21 @@ public class User {
         this.type = type;
     }
 
-
-    //Main method for testing
-  /*  public void runUser(String userType) throws InputMismatchException, IOException {
+    public void runUser(String u, String p, String userType, int existingUser) throws InputMismatchException, IOException {
+        String output = "";
         initializeUserList();
         Scanner s = new Scanner(System.in);
         FileOutputStream fos = new FileOutputStream("userlist.txt", true);
         PrintWriter pw = new PrintWriter(fos);
         int userStatus = 0;
         boolean check;
-        do {
-            System.out.println("Are you a new or existing user? (Press 1 for new and 2 for existing)");
-            try {
-                userStatus = s.nextInt();
-                s.nextLine();
-                if (userStatus == 1 || userStatus == 2) {
-                    check = false;
-                } else {
-                    System.out.println("Error. Please enter the integer 1 or 2.");
-                    check = true;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Error. Please enter a correct option value.");
-                s.next();
-                check = true;
-            }
-        } while (check);
 
         while (!login) {//While there has not been a successful login
-            System.out.println("Enter username: ");
-            String u = s.nextLine();
-            System.out.println("Enter password: ");
-            String p = s.nextLine();
-            if (userStatus == 1) { //If the user is a new user
-                if (validEntry(u)) {
-                    if (addUser(u, p, userType) == null) {
-                        System.out.println("Username taken. Please enter a different username");
-                    } else {
-                        User test = addUser(u, p, userType);
-                        username = u;
-                        password = p;
-                        type = userType;
-                        userList.add(test);
-                        writeUserlistToFile();
-                        System.out.println("New user has been created!");
-                        login = true;
-                        pw.close();
-                        initializeUserList();
-                    }
-                } else {
-                    System.out.println("Invalid username format");
-                }
-            } else { //If the user is an existing user
-                boolean found = searchForUser(u);
-                if (found) {
-                    if (p.equals(passwordInFile)) {//If the password is correct
-                        if (userType.equals(type)) {//If the user is the correct type
-                            System.out.println("Login successful!");
-                            username = u;
-                            password = p;
-                            login = true;
-                        } else {
-                            if (userType.equalsIgnoreCase("teacher")) {
-                                do {
-                                    System.out.println("Error. User is not a teacher." +
-                                            " Please press 2 to try again or press 1 to create a new user.");
-                                    check7 = false;
-                                    try {
-                                        userStatus = s.nextInt();
-                                        check7 = true;
-                                    } catch (InputMismatchException e) {
-                                        System.out.println("Please enter a valid value!");
-                                        check7 = false;
-                                    }
-                                } while (!check7);
-                                s.nextLine();
-                            } else {
-                                do {
-                                    System.out.println("Error. User is not a student." +
-                                            " Please press 2 to try again or press 1 to create a new user.");
-                                    check8 = false;
-                                    try {
-                                        userStatus = s.nextInt();
-                                        check8 = true;
-                                    } catch (InputMismatchException e) {
-                                        System.out.println("Please enter a valid value!");
-                                    }
-                                } while (!check8);
-                            }
-                        }
-                    } else {
-                        System.out.println(password);
-                        System.out.println("Error. Incorrect password." +
-                                " Please press 2 to try again or press 1 to create a new user.");
-                        userStatus = s.nextInt();
-                        s.nextLine();
-                    }
-                } else {
-                    System.out.println("Error. Invalid username. Please press 2 to try again or press 1 to create a new user.");
-                    boolean invalidUserCheck;
-                    do {
-                        try {
-                            userStatus = s.nextInt();
-                            s.nextLine();
-                            invalidUserCheck = false;
-                        } catch (InputMismatchException e) {
-                            System.out.println("Error. Enter a valid input!");
-                            invalidUserCheck = true;
-                            s.next();
-                        }
-                    } while (invalidUserCheck);
-                }
-            }
-        }
-    }*/
-    //example of makeQuiz from the Quiz Class being implemented
-    //Quiz.makeQuiz();
-
-    public void runUser(String userType) throws InputMismatchException, IOException {
-        initializeUserList();
-        Scanner s = new Scanner(System.in);
-        FileOutputStream fos = new FileOutputStream("userlist.txt", true);
-        PrintWriter pw = new PrintWriter(fos);
-        int userStatus = 0;
-        boolean check;
-        int existingUser;
-        String u;
-        String p;
-
-            existingUser = JOptionPane.showConfirmDialog(null, "Are you an existing user?", "Quiz Application",
-                    JOptionPane.YES_NO_OPTION);
-
-        while (!login) {//While there has not been a successful login
-            u = JOptionPane.showInputDialog(null, "Please enter a username for your account", "Quiz Application", JOptionPane.QUESTION_MESSAGE);
-            p = JOptionPane.showInputDialog(null, "Please enter a password for your account", "Quiz Application", JOptionPane.QUESTION_MESSAGE);
 
             if (existingUser == 1) { //If the user is a new user
                 if (validEntry(u)) {
                     if (addUser(u, p, userType) == null) {
-                        JOptionPane.showMessageDialog(null,"Username taken. Please enter a different username", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                        output = "taken";
                     } else {
                         User test = addUser(u, p, userType);
                         username = u;
@@ -173,35 +49,34 @@ public class User {
                         type = userType;
                         userList.add(test);
                         writeUserlistToFile();
-                        JOptionPane.showMessageDialog(null, "New user has been created!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                        output = "success";
                         login = true;
                         pw.close();
                         initializeUserList();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null,"Invalid username format", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                    output = "invalid";
                 }
             } else { //If the user is an existing user
                 boolean found = searchForUser(u);
                 if (found) {
                     if (p.equals(passwordInFile)) {//If the password is correct
                         if (userType.equals(type)) {//If the user is the correct type
-                            JOptionPane.showMessageDialog(null, "Login successful!", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
+                            output = "success";
                             username = u;
                             password = p;
                             login = true;
                         } else {
                             if (userType.equalsIgnoreCase("student")) {
-                                    JOptionPane.showMessageDialog(null, "Error. User is not a student.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-                                   login = false;
+                                output = "invalidtype";
+                                login = false;
                             } else {
-                                    JOptionPane.showMessageDialog(null, "Error. User is not a teacher.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-                                    login = false;
+                                output = "invalidtype";
+                                login = false;
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error. Incorrect password.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
-
+                        output = "wrong";
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Error. Invalid username.", "Quiz Application", JOptionPane.INFORMATION_MESSAGE);
